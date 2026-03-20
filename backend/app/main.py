@@ -1,5 +1,6 @@
 from fastapi import FastAPI
-from app.routes.transcribe import router
+from app.routes.transcribe import transcriptions
+from app.routes.activity import activities
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -15,5 +16,7 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World"}
 
-app.include_router(router)
+app.include_router(transcriptions)
+app.include_router(activities)
+
 

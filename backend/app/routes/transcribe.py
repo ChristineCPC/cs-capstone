@@ -1,11 +1,12 @@
 from fastapi import APIRouter, UploadFile, File
 from app.agent.whisper.transcription import transcribe_audio
+from app.agent.pronunciation_score import pronunciation_score
+from app.agent.gemini.sessions.generate_activity import gen_activity
 import shutil
 
-router = APIRouter()
+transcriptions = APIRouter()
 
-#rough draft for whipser transcription logic in the backend
-@router.post("/transcribe")
+@transcriptions.post("/transcribe")
 def transcribe(audio_file: UploadFile = File(...)):
     audio_file_location = f"temp_{audio_file.filename}"
 
@@ -16,4 +17,12 @@ def transcribe(audio_file: UploadFile = File(...)):
 
     print(f"Recieved, , {audio_file.filename}: {transcript}")
 
-    return {"transcription": transcript}
+    return transcript
+
+@transcriptions.post("/score")
+def score(activity: str, section: str, difficulity: str, current_index: int,  audio_file: UploadFile = File(...)):
+    transcript = transcribe(audio_file)
+    expected_transcript = gen_activity(activity, section)[difficulity][current_index]
+    #expected_transcript = expected_transcript[difficulity]
+    
+    return pronunciation_score(transcript, expected_transcript)

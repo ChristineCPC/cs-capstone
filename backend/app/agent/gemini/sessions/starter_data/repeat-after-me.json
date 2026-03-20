@@ -1,0 +1,19 @@
+{
+    "at-words": {
+        "rules": "Only in JSON, generate words ending with the suffix -at. Generate 20 words for each level of difficulty. Words from previous levels can be reused in other levels as long as there is enough variety.",
+        "example-bank": {
+            "1": ["Bat", "Cat", "Mat", "Rat", "Hat"],
+            "2": ["Splat", "Chat"]
+        },
+        "max-difficulty": 10
+    },
+
+    "short-sentences": {
+        "rules": "Only in JSON, generate short sentences with 3-6.",
+        "example-bank": {
+            "1": ["I see the sun.", "I like my hat.", "The cat sat."],
+            "2": ["Look at the light.", "Sam sits on the sand.", "See the silly snake."]
+        },
+        "max-difficulty": 3
+    }
+}
