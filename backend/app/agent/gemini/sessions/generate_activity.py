@@ -21,7 +21,7 @@ def gen_activity(activity:str, section:str):
     client = get_gemini()
     prompt = f"""
                 Using these directions, {parsed_start_data[section]["rules"]}
-                generate a cluster that will children with their speech development.
+                generate a cluster that will help children with their speech development.
                 Only use words that exist in the English dictionary, are reasonable
                 for a child to say, and is appropriate, especially for children.
                 Incorporate levels of difficulty as indicated by:

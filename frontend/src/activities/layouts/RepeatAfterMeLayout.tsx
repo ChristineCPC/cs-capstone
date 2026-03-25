@@ -9,6 +9,8 @@ import { sendAudioToBackend } from "@/hooks/sendAudioToBackend";
 import { Router, useLocalSearchParams } from "expo-router";
 import getActivityId from "../engine/getActivityId";
 import { fetchActivity } from "../engine/fetchActivities";
+import { fetchScore } from "../engine/fetchScore";
+import { fetchFeedback } from "../engine/fetchFeedback";
 
 export default function RepeatAfterMeLayout() {
 
@@ -79,6 +81,22 @@ export default function RepeatAfterMeLayout() {
     }, [activity, section])
 
     const onDisplay = bank[currentIndex];
+
+    const handleScore = async () => {
+        if (!activity?.id || !section?.id) return;
+
+        const score = fetchScore(activity?.id, section?.id);
+        
+        {/*transcript*/}
+
+        {/*current word*/}
+    }
+
+    const handleFeedback = async () => {
+        if (!activity?.id || !section?.id) return;
+
+        const feedback = fetchFeedback(activity?.id, section?.id);
+    }
 
     return (
         <View className="items-center flex justify-between mt-10 bg-gray-500 min-h-screen p-10">

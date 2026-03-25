@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from app.routes.transcribe import transcriptions
 from app.routes.activity import activities
+from app.routes.feedback import feedback
+from app.routes.agent import agent
+
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
@@ -18,5 +21,7 @@ def read_root():
 
 app.include_router(transcriptions)
 app.include_router(activities)
+app.include_router(feedback)
+app.include_router(agent)
 
 

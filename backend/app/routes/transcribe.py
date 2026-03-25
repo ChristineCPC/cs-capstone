@@ -23,6 +23,5 @@ def transcribe(audio_file: UploadFile = File(...)):
 def score(activity: str, section: str, difficulity: str, current_index: int,  audio_file: UploadFile = File(...)):
     transcript = transcribe(audio_file)
     expected_transcript = gen_activity(activity, section)[difficulity][current_index]
-    #expected_transcript = expected_transcript[difficulity]
     
     return pronunciation_score(transcript, expected_transcript)
