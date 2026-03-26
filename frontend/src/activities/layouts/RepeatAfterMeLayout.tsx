@@ -8,9 +8,7 @@ import {useAudioRecorder, AudioModule, RecordingPresets, setAudioModeAsync, useA
 import { sendAudioToBackend } from "@/hooks/sendAudioToBackend";
 import { Router, useLocalSearchParams } from "expo-router";
 import getActivityId from "../engine/getActivityId";
-import { fetchActivity } from "../engine/fetchActivities";
-import { fetchScore } from "../engine/fetchScore";
-import { fetchFeedback } from "../engine/fetchFeedback";
+import FeedbackPopup from "@/components/FeedbackPopup";
 
 export default function RepeatAfterMeLayout() {
 
@@ -32,13 +30,48 @@ export default function RepeatAfterMeLayout() {
         await audioRecorder.stop();
     }
 
+    const [transcript, setTranscript] = useState<string>("");
+    const [genActivity, setGenActivity] = useState<string[]>([]);
+    const [score, setScore] = useState<number | null>(null);
+    const [feedback, setFeedback] = useState<string[]>([]);
+
     const handleRecording = async () => {
         const status = await AudioModule.requestRecordingPermissionsAsync();
 
         if (recorderState.isRecording) {
             await audioRecorder.stop();
-            sendAudioToBackend(audioRecorder.uri as string);
+            const result = await sendAudioToBackend(audioRecorder.uri as string);
             console.log("Stopped recording...");
+
+            setTranscript(result.transcript);
+            setGenActivity(result.get_activity);
+            setScore(result.get_score);
+            setFeedback(result.feedback);
+
+            if (result.score >= 80 && currentIndex < bank.length - 1) {
+                setCurrentIndex((currentIndex) => currentIndex + 1);
+                console.log("Correct");
+
+                {/*reset*/}
+                useEffect(() => {
+                    setTranscript("");
+                    setScore(null);
+                    setFeedback([]);
+                }, [currentIndex]);
+
+            } if (currentIndex > bank.length - 1) {
+                console.log("Activity complete, return to selection screen...");
+
+                {/*reset*/}
+                useEffect(() => {
+                    setTranscript("");
+                    setScore(null);
+                    setFeedback([]);
+                }, [currentIndex]);
+            } else {
+                console.log("Incorrect");
+            }
+
             return;
         }
 
@@ -68,12 +101,7 @@ export default function RepeatAfterMeLayout() {
         const handleActivities = async () => {
             if (!activity?.id || !section?.id) return;
 
-            const currentActivity = await fetchActivity(activity?.id, section?.id);
-
-            const difficultyLevel = "1";
-
-            const fetchBank = currentActivity?.[difficultyLevel] || [];
-            setBank(fetchBank);
+            setBank(genActivity);
             setCurrentIndex(0);
         };
 
@@ -82,21 +110,6 @@ export default function RepeatAfterMeLayout() {
 
     const onDisplay = bank[currentIndex];
 
-    const handleScore = async () => {
-        if (!activity?.id || !section?.id) return;
-
-        const score = fetchScore(activity?.id, section?.id);
-        
-        {/*transcript*/}
-
-        {/*current word*/}
-    }
-
-    const handleFeedback = async () => {
-        if (!activity?.id || !section?.id) return;
-
-        const feedback = fetchFeedback(activity?.id, section?.id);
-    }
 
     return (
         <View className="items-center flex justify-between mt-10 bg-gray-500 min-h-screen p-10">
@@ -124,6 +137,9 @@ export default function RepeatAfterMeLayout() {
                             </View>
                         </View>
                     </View>
+                </View>
+                <View>
+                    {FeedbackPopup({feedback})}
                 </View>
             </View>
             

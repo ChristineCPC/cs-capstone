@@ -10,6 +10,8 @@ transcriptions = APIRouter()
 def transcribe(audio_file: UploadFile = File(...)):
     audio_file_location = f"temp_{audio_file.filename}"
 
+    audio_file.file.seek(0)
+
     with open(audio_file_location, "wb") as buffer:
         shutil.copyfileobj(audio_file.file, buffer)
 

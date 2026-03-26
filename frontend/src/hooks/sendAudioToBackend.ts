@@ -1,4 +1,6 @@
 export const sendAudioToBackend = async (uri: string) => {
+    {/*Send audio to agent in backend; Agent sends data back to frontend*/}
+    
     const formData = new FormData();
 
     const fileConfig: any = {
@@ -9,9 +11,9 @@ export const sendAudioToBackend = async (uri: string) => {
 
     formData.append("audio_file", fileConfig);
 
-    const transcriptRoute = process.env.EXPO_PUBLIC_TRANSCRIPT_ROUTE;
+    const agentRoute = process.env.EXPO_PUBLIC_AGENT_ROUTE;
 
-    const response = await fetch(transcriptRoute, {
+    const response = await fetch(agentRoute, {
         method: "POST",
         body: formData,
         headers: {"Accept": "application/json"},
@@ -19,5 +21,6 @@ export const sendAudioToBackend = async (uri: string) => {
 
     const data = await response.json();
     console.log(data.transcription)
+    return data;
 }
 
