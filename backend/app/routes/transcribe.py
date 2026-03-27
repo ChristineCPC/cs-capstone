@@ -1,4 +1,4 @@
-from fastapi import APIRouter, UploadFile, File
+from fastapi import APIRouter, UploadFile, File, Form
 from app.agent.whisper.transcription import transcribe_audio
 from app.agent.pronunciation_score import pronunciation_score
 from app.agent.gemini.sessions.generate_activity import gen_activity
@@ -22,8 +22,8 @@ def transcribe(audio_file: UploadFile = File(...)):
     return transcript
 
 @transcriptions.post("/score")
-def score(activity: str, section: str, difficulity: str, current_index: int,  audio_file: UploadFile = File(...)):
+def score(current_word: str = Form(...),  audio_file: UploadFile = File(...)):
     transcript = transcribe(audio_file)
-    expected_transcript = gen_activity(activity, section)[difficulity][current_index]
+    expected_transcript = current_word
     
     return pronunciation_score(transcript, expected_transcript)

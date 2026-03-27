@@ -4,19 +4,18 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 interface feedbackProps {
     feedback: string[];
+    onClose: () => void;
 }
 
-export default function FeedbackPopup({feedback}:feedbackProps) {
-    const [feedbackVisible, setFeedbackVisible] = useState(false);
+export default function FeedbackPopup({feedback, onClose}:feedbackProps) {
     return (
         <SafeAreaView>
             <Modal
                 animationType="slide"
                 transparent={true}
-                visible={feedbackVisible}
+                visible={true}
                 onRequestClose={() => {
-                    Alert.alert('Popup has been closed...');
-                    setFeedbackVisible(!feedbackVisible)
+                    onClose
                 }}
             >
             <View>
@@ -24,11 +23,11 @@ export default function FeedbackPopup({feedback}:feedbackProps) {
                     <Text>{feedback[0]}</Text>
                     <Text>{feedback[1]}</Text>
                 </View>
-                <Pressable>
+                <Pressable onPress={onClose}>
                     <Text>Close</Text>
                 </Pressable>
             </View>
             </Modal>
         </SafeAreaView>
-    )
-}
+    );
+};

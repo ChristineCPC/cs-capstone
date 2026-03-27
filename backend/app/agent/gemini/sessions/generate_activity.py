@@ -41,8 +41,9 @@ def gen_activity(activity:str, section:str):
                 - Follow patterns set by the JSON file provided
                 - Do not use any special characters
             """
-    response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=prompt, config={"response_mime_type": "application/json"})
+    response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt, config={"response_mime_type": "application/json"})
     output = response.candidates[0].content.parts[0].text
     output = output.replace("```json", "").replace("```", "").strip()
+    print("activities generated...")
 
     return json.loads(output)

@@ -26,6 +26,7 @@ def pronunciation_score(transcript, expected_transcript):
 
     matched_phonemes = SequenceMatcher(None, detected_phonemes, expected_phonemes)
     score = matched_phonemes.ratio()
+    print("score calculated...")
 
     return {
         "detected_pronunciation": detected_phonemes,

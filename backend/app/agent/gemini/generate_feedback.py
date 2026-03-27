@@ -4,12 +4,12 @@ from app.routes.transcribe import transcribe_audio
 from fastapi import UploadFile, File
 import json
 
-def gen_feedback(activity: str, section: str, difficulity: str, current_index: int,  audio_file: UploadFile = File(...)):
+def gen_feedback(transcript: str,  audio_file: UploadFile = File(...)):
     client = get_gemini()
     
     prompt = f"""
                 Look at the following metrics:
-                {score(activity, section, difficulity, current_index, audio_file)}
+                {score(transcript, audio_file)}
 
                 Using these, generate feedback for the user who is trying to
                 improve their speech. Keep the feedback breif and simple enough
@@ -40,5 +40,6 @@ def gen_feedback(activity: str, section: str, difficulity: str, current_index: i
     response = client.models.generate_content(model="gemini-2.5-flash-lite", contents=prompt, config={"response_mime_type": "application/json"})
     output = response.candidates[0].content.parts[0].text
     output = output.replace("```json", "").replace("```", "").strip()
+    print("feedback generated...")
 
     return json.loads(output)

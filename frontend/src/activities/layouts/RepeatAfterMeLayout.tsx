@@ -1,6 +1,5 @@
 import { Alert, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Button from "@/components/Button";
 import {Mic} from "lucide-react-native";
 import { useState, useEffect } from "react";
@@ -9,6 +8,7 @@ import { sendAudioToBackend } from "@/hooks/sendAudioToBackend";
 import { Router, useLocalSearchParams } from "expo-router";
 import getActivityId from "../engine/getActivityId";
 import FeedbackPopup from "@/components/FeedbackPopup";
+import { fetchActivity } from "../engine/fetchActivities";
 
 export default function RepeatAfterMeLayout() {
 
@@ -31,45 +31,32 @@ export default function RepeatAfterMeLayout() {
     }
 
     const [transcript, setTranscript] = useState<string>("");
-    const [genActivity, setGenActivity] = useState<string[]>([]);
     const [score, setScore] = useState<number | null>(null);
     const [feedback, setFeedback] = useState<string[]>([]);
+
 
     const handleRecording = async () => {
         const status = await AudioModule.requestRecordingPermissionsAsync();
 
         if (recorderState.isRecording) {
             await audioRecorder.stop();
-            const result = await sendAudioToBackend(audioRecorder.uri as string);
+
+            if(!onDisplay) {
+                console.error("No word available");
+                return;
+            }
+
+            const result = await sendAudioToBackend(audioRecorder.uri as string, onDisplay);
             console.log("Stopped recording...");
 
-            setTranscript(result.transcript);
-            setGenActivity(result.get_activity);
-            setScore(result.get_score);
-            setFeedback(result.feedback);
-
-            if (result.score >= 80 && currentIndex < bank.length - 1) {
-                setCurrentIndex((currentIndex) => currentIndex + 1);
-                console.log("Correct");
-
-                {/*reset*/}
-                useEffect(() => {
-                    setTranscript("");
-                    setScore(null);
-                    setFeedback([]);
-                }, [currentIndex]);
-
-            } if (currentIndex > bank.length - 1) {
-                console.log("Activity complete, return to selection screen...");
-
-                {/*reset*/}
-                useEffect(() => {
-                    setTranscript("");
-                    setScore(null);
-                    setFeedback([]);
-                }, [currentIndex]);
-            } else {
-                console.log("Incorrect");
+            setTranscript(result.Transcript || "");
+            const rawScore = result.Score?.confidence ?? 0;
+            setScore(Math.round(rawScore*100));
+            if (result.Feedback) {
+                setFeedback([
+                    result.Feedback.Conclusion,
+                    result.Feedback.Feedback
+                ]);
             }
 
             return;
@@ -100,8 +87,12 @@ export default function RepeatAfterMeLayout() {
     useEffect(() => {
         const handleActivities = async () => {
             if (!activity?.id || !section?.id) return;
+            
+            const currentActivity = await fetchActivity(activity?.id, section?.id);
+            const difficultyLevel = "1";
+            const fetchBank = currentActivity?.[difficultyLevel] || [];
 
-            setBank(genActivity);
+            setBank(fetchBank);
             setCurrentIndex(0);
         };
 
@@ -110,13 +101,35 @@ export default function RepeatAfterMeLayout() {
 
     const onDisplay = bank[currentIndex];
 
+    useEffect(() => {
+        if (score === null || score === 0) return;
+
+        if (score >= 80) {
+            console.log("Correct");
+        } else {
+            console.log("Incorrect");
+        }
+    }, [score]);
+
+    {/*move on to next word; triggers when score conditions are met and feedback popup is closed by user (fix later: doesn't work)*/}
+    useEffect(() => {
+        if (feedback?.length === 0 && score !== null && score >= 80){
+            if (currentIndex < (bank?.length ?? 0) - 1) {
+                setCurrentIndex((prev) => prev + 1);
+                setScore(0);
+            } else {
+                console.log("Activity complete, return to selection screen...")
+            }
+        }
+    }, [feedback, score, currentIndex]);
+
 
     return (
         <View className="items-center flex justify-between mt-10 bg-gray-500 min-h-screen p-10">
             
             <View className="items-center">
                 {/*Word Bank */}
-                <View className="py-5">
+                <View className="py-0">
                     {/*set up word bank functionality; then get a word/sentence to show up here; container length/height also needs to accomodate word/sentence length */}
                     <Text className="text-xl">{activity?.name} - {section?.name} Layout</Text>
                 </View>
@@ -138,9 +151,6 @@ export default function RepeatAfterMeLayout() {
                         </View>
                     </View>
                 </View>
-                <View>
-                    {FeedbackPopup({feedback})}
-                </View>
             </View>
             
             {/*Operational Buttons*/}
@@ -151,9 +161,18 @@ export default function RepeatAfterMeLayout() {
                 <Button icon={<Text>🔊</Text>} label="Play audio" onPress={() => console.log("d")}/>
                 <Button icon={<Text>🔊</Text>} label="Play audio" onPress={() => console.log("d")}/>
             </SafeAreaView>
+
+            {/*Feedback for User*/}
+            {Array.isArray(feedback) && feedback.length > 0 && (
+                <View className="absolute z-50" style={{elevation: 5}}>
+                    <FeedbackPopup 
+                        feedback={feedback}
+                        onClose={() => setFeedback([])} 
+                    />
+                    
+                </View>
+            )}
             
         </View>
-
-        
     )
 }
