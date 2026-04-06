@@ -12,19 +12,19 @@ export default function FeedbackPopup({feedback, onClose}:feedbackProps) {
         <SafeAreaView>
             <Modal
                 animationType="slide"
-                transparent={true}
+                transparent={false}
                 visible={true}
                 onRequestClose={() => {
                     onClose
                 }}
             >
-            <View>
-                <View>
-                    <Text>{feedback[0]}</Text>
-                    <Text>{feedback[1]}</Text>
+            <View className="justify-center">
+                <View className="justify-center">
+                    <Text className="font-bold text-xl">{feedback[0]}</Text>
+                    <Text className="font-medium text-md">{feedback[1]}</Text>
                 </View>
-                <Pressable onPress={onClose}>
-                    <Text>Close</Text>
+                <Pressable onPress={onClose} className=" bg-blue-400 rounded-lg p-5">
+                    <Text className="font-bold text-lg color-white ">Close</Text>
                 </Pressable>
             </View>
             </Modal>

@@ -3,7 +3,6 @@ from fastapi import APIRouter, File, UploadFile, Form
 from app.routes.transcribe import transcribe
 from app.routes.transcribe import score
 from app.routes.feedback import get_feedback
-from app.routes.activity import gen_activity
 
 agent = APIRouter()
 

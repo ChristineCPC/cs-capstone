@@ -1,7 +1,7 @@
 import { Alert, Text, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import Button from "@/components/Button";
-import {Mic} from "lucide-react-native";
+import {Mic, RotateCcw} from "lucide-react-native";
 import { useState, useEffect } from "react";
 import {useAudioRecorder, AudioModule, RecordingPresets, setAudioModeAsync, useAudioRecorderState} from "expo-audio";
 import { sendAudioToBackend } from "@/hooks/sendAudioToBackend";
@@ -21,6 +21,7 @@ export default function RepeatAfterMeLayout() {
     const audioRecorder = useAudioRecorder(RecordingPresets.HIGH_QUALITY);
     const recorderState = useAudioRecorderState(audioRecorder);
 
+    {/*Remove later if not used*/}
     const record = async () => {
         await audioRecorder.prepareToRecordAsync();
         audioRecorder.record();
@@ -101,36 +102,23 @@ export default function RepeatAfterMeLayout() {
 
     const onDisplay = bank[currentIndex];
 
+    {/*for debugging only*/}
     useEffect(() => {
         if (score === null || score === 0) return;
 
         if (score >= 80) {
-            console.log("Correct");
+            console.log("Correct", score);
         } else {
-            console.log("Incorrect");
+            console.log("Incorrect", score);
         }
     }, [score]);
-
-    {/*move on to next word; triggers when score conditions are met and feedback popup is closed by user (fix later: doesn't work)*/}
-    useEffect(() => {
-        if (feedback?.length === 0 && score !== null && score >= 80){
-            if (currentIndex < (bank?.length ?? 0) - 1) {
-                setCurrentIndex((prev) => prev + 1);
-                setScore(0);
-            } else {
-                console.log("Activity complete, return to selection screen...")
-            }
-        }
-    }, [feedback, score, currentIndex]);
-
 
     return (
         <View className="items-center flex justify-between mt-10 bg-gray-500 min-h-screen p-10">
             
             <View className="items-center">
-                {/*Word Bank */}
+                {/*placeholder for now */}
                 <View className="py-0">
-                    {/*set up word bank functionality; then get a word/sentence to show up here; container length/height also needs to accomodate word/sentence length */}
                     <Text className="text-xl">{activity?.name} - {section?.name} Layout</Text>
                 </View>
             
@@ -156,18 +144,31 @@ export default function RepeatAfterMeLayout() {
             {/*Operational Buttons*/}
             <SafeAreaView className="flex-row flex-wrap justify-center gap-5 px-4 xl:mb-10 bottom-0 xl:bottom-20" style={{paddingBottom: inset.bottom}}>
                 <Button icon={<Mic />} label="Record Audio" onPress={handleRecording}/>
-                <Button icon={<Text>🔊</Text>} label="Record Audio" onPress={handleRecording}/>
-                <Button icon={<Text>🔊</Text>} label="Replay Demo" onPress={() => console.log("d")}/>
-                <Button icon={<Text>🔊</Text>} label="Play audio" onPress={() => console.log("d")}/>
-                <Button icon={<Text>🔊</Text>} label="Play audio" onPress={() => console.log("d")}/>
+                <Button icon={<RotateCcw />} label="Record Audio" onPress={handleRecording}/>
+                <Button icon={<RotateCcw />} label="Replay Demo" onPress={() => console.log("d")}/>
+                <Button icon={<RotateCcw />} label="Play audio" onPress={() => console.log("d")}/>
+                <Button icon={<RotateCcw />} label="Play audio" onPress={() => console.log("d")}/>
             </SafeAreaView>
 
             {/*Feedback for User*/}
             {Array.isArray(feedback) && feedback.length > 0 && (
-                <View className="absolute z-50" style={{elevation: 5}}>
+                <View className="absolute z-50 justify-center p-20" style={{elevation: 5}}>
                     <FeedbackPopup 
                         feedback={feedback}
-                        onClose={() => setFeedback([])} 
+                        onClose={() => {
+                            if(score !== null && score >= 80) {
+                                if (currentIndex < (bank?.length ?? 0) - 1) {
+                                    setCurrentIndex((prev) => prev + 1);
+                                } else {
+                                    {/*setup another popup that will take the user back to the activity section screen here*/}
+                                    console.log("Activity complete, return to selection screen...");
+                                }
+                            }
+
+                            setFeedback([]); 
+                            setScore(0);
+                            setTranscript("");
+                        }} 
                     />
                     
                 </View>

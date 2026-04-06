@@ -1,6 +1,5 @@
 from app.agent.gemini.client import get_gemini
 from app.routes.transcribe import score
-from app.routes.transcribe import transcribe_audio
 from fastapi import UploadFile, File
 import json
 

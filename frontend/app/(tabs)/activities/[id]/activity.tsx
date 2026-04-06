@@ -1,6 +1,6 @@
 import getActivityId from "../../../../src/activities/engine/getActivityId";
 import { useLocalSearchParams } from "expo-router";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SafeAreaView } from "react-native-safe-area-context";
 

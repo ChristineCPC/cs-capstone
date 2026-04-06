@@ -10,7 +10,7 @@ export default function ActivitiesScreen() {
         <View>
             <ActivityCard 
                 title="Word Bites"
-                icon={<Text>🏊</Text>}
+                icon={<Text>Placeholder</Text>}
                 description="Break words into smaller parts."
                 color="blue"
                 onPress={() => router.push(`/activities/word-bites`)}
@@ -18,7 +18,7 @@ export default function ActivitiesScreen() {
 
             <ActivityCard
                 title="Repeat After Me"
-                icon={<Text>Find smth</Text>}
+                icon={<Text>Placeholder</Text>}
                 description="practice pronouncation by copying what is being said."
                 color="green"
                 onPress={() => router.push(`/activities/repeat-after-me`)}
