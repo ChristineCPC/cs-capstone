@@ -1,0 +1,14 @@
+fastapi
+uvicorn
+openai-whisper
+phonemizer
+google-genai
+python-multipart
+Levenshtein
+peft
+dotenv
+torch
+accelerate
+bitsandbytes
+transformers
+librosa
