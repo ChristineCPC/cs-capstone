@@ -6,9 +6,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY . .
-RUN pip install -r requirements.txt
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 # Pre-downloads models; should be faster
 RUN python -c "from transformers import WhisperForConditionalGeneration; WhisperForConditionalGeneration.from_pretrained('openai/whisper-small')"
 
+COPY . .
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

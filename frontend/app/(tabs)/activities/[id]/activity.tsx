@@ -17,7 +17,7 @@ export default function ActivityScreen() {
         <SafeAreaView className="flex-col">
 
             {/*Header*/}
-            <View className="bg-red-500 h-20 p-5 top-0 absolute w-full">
+            <View className="bg-orange-500 h-30 p-5 top-0 absolute w-full">
                 <Text className="text-xl font-bold">{activity?.name} - {section?.name}</Text>
             </View>
             

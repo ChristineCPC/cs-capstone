@@ -1,0 +1,40 @@
+{
+    "frames": {
+        "a": "a_e_1.png",
+        "e": "a_e_i.png",
+        "i": "a_e_i.png",
+
+        "b": "b_p_m.png",
+        "p": "b_p_m.png",
+        "m": "b_p_m.png",
+
+        "c": "c_d_n_s_t_x_y.png",
+        "d": "c_d_n_s_t_x_y.png",
+        "n": "c_d_n_s_t_x_y.png",
+        "s": "c_d_n_s_t_x_y.png",
+        "t": "c_d_n_s_t_x_y.png",
+        "x": "c_d_n_s_t_x_y.png",
+        "y": "c_d_n_s_t_x_y.png",
+
+        "ch": "ch_j.png",
+        "j": "ch_j.png",
+
+        "f": "f_v.png",
+        "v": "f_v.png",
+
+        "ee": "e_e.png",
+
+        "l": "l.png",
+
+        "o": "o.png",
+
+
+        "q": "p_w.png",
+        "w": "p_w.png",
+
+        "th": "th.png",
+
+        "u": "u.png"
+        
+    }
+}

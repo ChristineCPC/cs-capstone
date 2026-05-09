@@ -9,7 +9,7 @@
     },
 
     "short-sentences": {
-        "rules": "Only in JSON, generate short sentences with 3-6.",
+        "rules": "Only in JSON, generate short sentences with 3-6 words.",
         "example-bank": {
             "1": ["I see the sun.", "I like my hat.", "The cat sat."],
             "2": ["Look at the light.", "Sam sits on the sand.", "See the silly snake."]

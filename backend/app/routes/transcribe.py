@@ -24,7 +24,6 @@ def transcribe(audio_file: UploadFile = File(...)):
 
 @transcriptions.post("/score")
 def score(current_word: str = Form(...),  audio_file: UploadFile = File(...)):
-    transcript = transcribe(audio_file)
     expected_transcript = current_word
 
     audio_file_location = f"temp_{audio_file.filename}"
@@ -36,8 +35,6 @@ def score(current_word: str = Form(...),  audio_file: UploadFile = File(...)):
  
     try:
         transcript = transcribe_audio(audio_file_location)
-
-        print(f"Recieved, , {audio_file.filename}: {transcript}")
 
         return {
             "Transcript": transcript, 

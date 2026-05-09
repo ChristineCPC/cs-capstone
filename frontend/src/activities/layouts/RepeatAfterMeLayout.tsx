@@ -114,7 +114,7 @@ export default function RepeatAfterMeLayout() {
     }, [score]);
 
     return (
-        <View className="items-center flex justify-between mt-10 bg-gray-500 min-h-screen p-10">
+        <View className="items-center flex justify-between mt-10 bg-orange-200 min-h-screen p-10">
             
             <View className="items-center">
                 {/*placeholder for now */}
@@ -132,7 +132,7 @@ export default function RepeatAfterMeLayout() {
 
                     <View className="w-3/5 p-2">
                         {/*Word/Sentence Bank*/}
-                        <View className="bg-blue-500 h-60 justify-center">
+                        <View className="bg-white h-60 justify-center">
                             <View className="p-10">
                                 <Text className="text-5xl font-bold uppercase">{onDisplay ? onDisplay: "Loading..."}</Text>
                             </View>
@@ -142,12 +142,9 @@ export default function RepeatAfterMeLayout() {
             </View>
             
             {/*Operational Buttons*/}
-            <SafeAreaView className="flex-row flex-wrap justify-center gap-5 px-4 xl:mb-10 bottom-0 xl:bottom-20" style={{paddingBottom: inset.bottom}}>
+            <SafeAreaView className="flex-row flex-wrap justify-center gap-1 px-4 xl:mb-10 bottom-0 xl:bottom-20" style={{paddingBottom: inset.bottom}}>
                 <Button icon={<Mic />} label="Record Audio" onPress={handleRecording}/>
-                <Button icon={<RotateCcw />} label="Record Audio" onPress={handleRecording}/>
                 <Button icon={<RotateCcw />} label="Replay Demo" onPress={() => console.log("d")}/>
-                <Button icon={<RotateCcw />} label="Play audio" onPress={() => console.log("d")}/>
-                <Button icon={<RotateCcw />} label="Play audio" onPress={() => console.log("d")}/>
             </SafeAreaView>
 
             {/*Feedback for User*/}

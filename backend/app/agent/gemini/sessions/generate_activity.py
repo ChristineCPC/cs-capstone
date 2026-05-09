@@ -39,11 +39,19 @@ def gen_activity(activity:str, section:str):
                 - Do not use any markdown
                 - No extra text
                 - Follow patterns set by the JSON file provided
-                - Do not use any special characters
+                - Use standard alphabumeric characters for words only while maintaining JSON structure.
             """
     response = client.models.generate_content(model="gemini-2.5-flash", contents=prompt, config={"response_mime_type": "application/json"})
-    output = response.candidates[0].content.parts[0].text
-    output = output.replace("```json", "").replace("```", "").strip()
+
+    try: 
+        output = response.text.strip()
+        return json.loads(output)
+    except json.JSONDecodeError as error:
+        print(f"JSON Error: {error}")
+
+        output = response.candidates[0].content.parts[0].text
+        output = output.replace("```json", "").replace("```", "").strip()
+    
     print("activities generated...")
 
     return json.loads(output)

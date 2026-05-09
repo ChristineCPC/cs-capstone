@@ -1,0 +1,23 @@
+{
+    "short-stories": {
+        "rules": "Only in JSON, generate short stories with each page containing 1-2 sentences. Each sentence will have 3-10 words. Genearate 5 pages for each story. Make sure there is a clear begining and end. Make sure these stories are approriate and comprehinsible for a young child.",
+        "example-bank": {
+            "1": [
+                ["The cat sat on the mat.", "It was a sunny day."],
+                ["Sam has a red hat.", "He likes to wear it."],
+                ["The dog is big.", "It barks loudly."],
+                ["I see a bird.", "It is flying high."],
+                ["The sun is hot.", "I like to play outside."]
+            ],
+            "2": [
+                ["The cat sat on the mat.", "It was a sunny day."],
+                ["Sam has a red hat.", "He likes to wear it."],
+                ["The dog is big.", "It barks loudly."],
+                ["I see a bird.", "It is flying high."],
+                ["The sun is hot.", "I like to play outside."]
+            ]
+        },
+
+        "max-difficulty": 10
+    }
+}

@@ -11,14 +11,12 @@ import torch
 from app.agent.finetuned_whisper.missing_phonemes import get_missing_phonemes
 import librosa
 
-peft_model_id = "ChristineCPC/whisper-phoneme-fine-tuning"
+peft_model_id = "ChristineCPC/whisper-phoneme-tuning-v3"
 config = PeftConfig.from_pretrained(peft_model_id)
 base_model = WhisperForConditionalGeneration.from_pretrained(config.base_model_name_or_path)
 processor = WhisperProcessor.from_pretrained(config.base_model_name_or_path)
 
 model = PeftModel.from_pretrained(base_model, peft_model_id)
-
-#g2p = G2p()
 
 def pronunciation_score(transcript, expected_transcript):
     #both transcripts will be translated phonemically.
@@ -26,10 +24,6 @@ def pronunciation_score(transcript, expected_transcript):
     #for the scoring process each section of the breakdown will compared to each other and the code should keep track of how many chunks match
     #everytime a chunk does not match the score will decrease. 
     #if there is time; implement a way for the app to keep track of what chunks were incorrect and incorporate suggestions on how to improve in the feedback when working with gemini
-
-    #maybe disregard this or keep for simplicity/testing
-    #if (transcript != expected_pronunciation):
-        #"Try again!"
 
     #scoring output will be expected_pronunciation, detected_pronunciation, matched_chunks, confidence (similar layout as prototype; but not visible to user after testing)
 
@@ -42,16 +36,12 @@ def pronunciation_score(transcript, expected_transcript):
     with torch.no_grad():
         predicted_ids = model.generate(input_features)
 
-    #detected_phonemes = g2p(transcript)
-    #expected_phonemes = g2p(expected_transcript)
     detected_phonemes = processor.batch_decode(predicted_ids, skip_special_tokens=True)[0]
     expected_phonemes = phonemize(expected_transcript, language='en-us', backend='espeak')
 
-    #matched_phonemes = SequenceMatcher(None, detected_phonemes, expected_phonemes)
-    #score = matched_phonemes.ratio()
     matched_phonemes = Levenshtein.distance(detected_phonemes, expected_phonemes)
     max_len = max(len(detected_phonemes), len(expected_phonemes))
-    score = max(0, (1 - (matched_phonemes / max_len) * 100))
+    score = (1 - (matched_phonemes / max_len)) * 100
     print("score calculated...")
 
     missed_phonemes = get_missing_phonemes(detected_phonemes, expected_phonemes)

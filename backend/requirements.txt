@@ -10,5 +10,8 @@ dotenv
 torch
 accelerate
 bitsandbytes
-transformers
 librosa
+torchaudio
+transformers
+piper-tts
+moviepy
